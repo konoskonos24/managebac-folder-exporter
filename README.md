@@ -1,27 +1,84 @@
-# managebac-file-scraper
+managebac-file-scraper (fork)
 
-This is a python script that downloads all files listed within the Files tab of ManageBac. It authenticates using your credentials, iterates over each class, and queues the downloads to an asynchronous download thread.
+Forked from: https://github.com/yutotakano/managebac-file-scraper
 
-## Usage
+Original author: yutotakano
 
-```cmd
-python3 scrape.py school_code username password output_dir [class_name]
-```
+This is a Python CLI tool that downloads all files listed in the Files tab of ManageBac.
+It authenticates using your credentials, iterates over each class, discovers folders, and downloads the available files into organized local directories.
 
-- `school_code` is the part between `https://` and `.managebac.com`.
-- `username` is your login email address.
-- `password` is your password.
-- `output_dir` is where all your downloads go. Each class gets its own subfolder inside.
-- The optional `class_name` is where you can specify a single class name (has to be identical word-for-word to what's on your ManageBac)
+Changes in this fork
 
-You can view this help through the optional `-h` or `--help` argument.
+Added folder discovery (recursive crawl)
 
-## Disclaimer
+Added --class-id and --class-name filters
 
-This script was made for the sole intent of backing up every class material before I left the school. While I did provide the `school_code` argument to make the script universal for all schools using ManageBac, this script isn't capable of handling every single edge case out there. If some part of this script can be of use, go ahead and fork it to create a version specific to your school.
+Added --list-folders mode (no download)
 
-Since I have graduated my school now, I can't fix/test/add anything to this script either. This repository exists as an archive and any issues or pull requests will not be accepted.
+Added --folder-id selective downloads
 
-## License
+Added retry logic with exponential backoff
 
-GNU General Public License v3.0. See LICENSE.md for more details.
+Improved filename sanitization
+
+Improved rate-limit handling
+
+Usage
+
+python scrape.py <school_code> <email> <password> <output_dir>
+
+Arguments
+
+school_code → the part between https:// and .managebac.com
+email → your ManageBac login email
+password → your ManageBac password
+output_dir → directory where downloads will be saved
+
+Each class is saved into its own subfolder.
+
+Optional filters
+
+Download a single class by name:
+
+python scrape.py myschool email password downloads --class-name "biology"
+
+Download a single class by ID:
+
+python scrape.py myschool email password downloads --class-id 12345
+
+List folders without downloading:
+
+python scrape.py myschool email password downloads --class-id 12345 --list-folders
+
+Download a specific folder:
+
+python scrape.py myschool email password downloads --class-id 12345 --folder-id 67890
+
+Show help:
+
+python scrape.py -h
+
+Security note
+
+Avoid putting your password in shell history.
+You can use an environment variable instead:
+
+export MB_PASSWORD="your_password"
+python scrape.py myschool email $MB_PASSWORD downloads
+
+Legal notice
+
+Use this tool only on accounts and data you are authorized to access.
+You are responsible for complying with your institution’s policies and ManageBac terms of service.
+
+This project is intended for personal backup and educational use.
+
+Disclaimer
+
+This tool may not handle all ManageBac edge cases.
+It is provided as a best-effort utility and may require adaptation for specific schools or account configurations.
+
+License
+
+GNU General Public License v3.0
+See LICENSE.md for details.
